@@ -1,8 +1,10 @@
 """Pytest configuration and fixtures."""
 
 import os
+
 import pytest
 from httpx import ASGITransport, AsyncClient
+
 from app.common.config import get_settings
 from app.main import create_app
 
@@ -26,7 +28,5 @@ def app():
 @pytest.fixture
 async def client(app) -> AsyncClient:
     """Provide an async test client."""
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://testserver"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://testserver") as ac:
         yield ac
