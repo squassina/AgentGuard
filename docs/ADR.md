@@ -47,3 +47,19 @@ Store canonical argument digest and metadata. Optional redacted snapshots requir
 ## ADR-012 — Existing project reuse is conditional
 **Status:** Accepted  
 OpenShield-luna and AMASDO are potential sources of patterns/components, not runtime dependencies. Reuse requires code review, license review, security review and independent tests.
+
+## ADR-013 — Customer-controlled production identities
+**Status:** Accepted
+Production agent authentication uses customer OAuth/OIDC claims bound to tenant-scoped Agent registrations, and human control-plane access uses workforce identity with tenant memberships. AgentGuard-issued production tokens and caller-supplied identity headers are not authoritative; isolated development/test credentials may remain.
+
+## ADR-014 — Shared tenant boundary
+**Status:** Accepted
+MVP uses shared cloud services with Tenant as the root ownership and isolation boundary. Dedicated customer deployments are out of MVP.
+
+## ADR-015 — Exact one-time approvals
+**Status:** Accepted
+An approval authorizes one exact tool call and binds to its tenant, agent, upstream configuration, tool schema, arguments, and policy version. It expires, can be redeemed once, and is invalidated by relevant identity or configuration changes; callers retry after dashboard review instead of the gateway invoking asynchronously.
+
+## ADR-016 — Tamper-evident audit chain
+**Status:** Accepted
+Application audit events are append-only and hash-chained per tenant; retention pruning uses signed checkpoints. This provides tamper evidence, not protection from privileged database operators.

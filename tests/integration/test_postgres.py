@@ -43,6 +43,33 @@ async def test_postgres_live_connection_and_tenants_table() -> None:
             assert row[1] == tenant_name
             assert row[2] == "active"
 
+            # Insert test agent in PostgreSQL
+            agent_id = uuid.uuid4()
+            await session.execute(
+                text(
+                    "INSERT INTO agents (id, tenant_id, name, environment, status, metadata_json) "
+                    "VALUES (:id, :tenant_id, :name, :env, :status, :meta)"
+                ),
+                {
+                    "id": agent_id,
+                    "tenant_id": tenant_id,
+                    "name": "pg-agent",
+                    "env": "development",
+                    "status": "active",
+                    "meta": "{}",
+                },
+            )
+            await session.commit()
+
+            # Verify agent in PostgreSQL
+            agent_res = await session.execute(
+                text("SELECT id, name FROM agents WHERE id = :id"),
+                {"id": agent_id},
+            )
+            agent_row = agent_res.fetchone()
+            assert agent_row is not None
+            assert agent_row[1] == "pg-agent"
+
             # Cleanup
             await session.execute(
                 text("DELETE FROM tenants WHERE id = :id"),

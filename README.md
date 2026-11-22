@@ -48,6 +48,26 @@ AgentGuard is a cloud-hosted MCP Security Gateway and Control Plane. It intercep
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
 
+## API Overview
+
+- **Health:**
+  - `GET /health/live`: Liveness probe.
+  - `GET /health/ready`: Readiness probe verifying PostgreSQL connection.
+  - `GET /metrics`: Service metrics probe.
+- **Tenants:**
+  - `POST /api/v1/tenants`: Create a tenant.
+  - `GET /api/v1/tenants/{tenant_id}`: Retrieve tenant details.
+- **Agents:**
+  - `POST /api/v1/agents`: Register an agent (scoped to `X-Tenant-ID`).
+  - `GET /api/v1/agents`: List tenant agents (supports `environment` and `status` filters).
+  - `GET /api/v1/agents/{agent_id}`: Retrieve agent details.
+  - `PATCH /api/v1/agents/{agent_id}`: Update agent metadata, environment, or status.
+  - `POST /api/v1/agents/{agent_id}/credentials`: Issue a new credential (raw token displayed only once).
+  - `GET /api/v1/agents/{agent_id}/credentials`: List agent credential metadata.
+  - `POST /api/v1/agents/{agent_id}/credentials/{credential_id}/rotate`: Atomically rotate credential.
+  - `DELETE /api/v1/agents/{agent_id}/credentials/{credential_id}`: Revoke credential.
+  - `POST /api/v1/agents/{agent_id}/revoke`: Revoke agent and all associated active credentials.
+
 ## Quality and Testing
 
 - **Lint and format checks:**
